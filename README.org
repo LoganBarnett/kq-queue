@@ -1,0 +1,157 @@
+#+title:    Killer Queen Queue README
+#+author:   Logan Barnett
+#+email:    logustus@gmail.com
+#+date:     <2018-02-14 Wed>
+#+language: en
+#+tags:     killer-queen
+
+* Description
+  :PROPERTIES:
+  :CUSTOM_ID: description
+  :END:
+
+KQ Queue (more) - A queuing system for Killer Queen cabinets using its
+tournament mode to manage a queue of games.
+
+* Motivations
+  :PROPERTIES:
+  :CUSTOM_ID: motivations
+  :END:
+
+Killer Queen is an incredibly fun game, and nudging your way in on a busy night
+can be a daunting ask for a new player. Different scenes might have different
+ways of cycling out players after a certain number of games. One of the things
+we found works well in the Portland scene is "sets". At time of writing, mean
+that two teams get together, and play three games (day, night, and dusk). After
+that the blue team steps off. The gold team shifts over to blue, and a new team
+gets on.
+
+The Killer Queen cabinet has a tournament mode it can be placed in, and it can
+track team names, who is up now, and who is up next. We found using that helps
+run things and drives up the hype. Players can sign up and get their place in a
+makeshift queue - they've reserved a place to play.
+
+We want to make it so someone's laptop doesn't need to be exposed (or something
+is responsible for maintaining it). Things at barcades have been known to
+sprout legs and walk off. The solution here is to host an app where setup is
+thoughtless, and queuing up can be done from a discount mobile device whose only
+capability is to carpet the Earth with emoji.
+
+* Installation
+  :PROPERTIES:
+  :CUSTOM_ID: installation
+  :END:
+
+* Design
+  :PROPERTIES:
+  :CUSTOM_ID: design
+  :END:
+
+  The Killer Queen cabinet is effectively [[https://en.wikipedia.org/wiki/Air_gap_(networking)][air-gapped]]. The cabinet is directly
+  controlled by a Raspberry Pi or other portable device. The Pi is connected to
+  the cabinet's Ethernet port, and the Pi is also connected to the barcade's
+  wifi. The Pi connects to a server hosted somewhere in the [[https://en.wikipedia.org/wiki/Series_of_tubes][series of tubes]]. The
+  server ultimately has control of how the cabinet will be directed.
+
+  #+begin_src plantuml :file network-design.svg
+node "barcade network" {
+  [cabinet] <- [pi]
+}
+
+node "internet" {
+  [pi] -> [server]
+  [server] <- [iphone4 why god why]
+}
+  #+end_src
+
+  #+RESULTS:
+  [[file:network-design.svg]]
+
+** Physical Components
+   :PROPERTIES:
+   :CUSTOM_ID: design--physical-components
+   :END:
+*** The Raspberry Pi (or other tiny device)
+    :PROPERTIES:
+    :CUSTOM_ID: design--physical-components--the-raspberry-pi-or-other-tiny-device
+    :END:
+    The actual size of the device doesn't matter terribly much. The device will
+    need power, needs to fit in the cabinet's internal space, and must run
+    Linux.
+
+    The role of the Raspberry Pi is to ferry communication between the server
+    and the cabinet. There's potential issues with the cabinet having Internet
+    access (potentially unplanned updates being a big one). We're not here to
+    take a stance on that. But we also don't want to expose the cabinet to
+    attack on the Internet. In many settings the cabinet receives a non-trivial
+    amount of the establishment's income. Putting it in a situation where it can
+    potentially be brought down remotely is very undesirable, and there are
+    virtually no knobs to turn for security as of time of writing. The Pi will
+    only talk to the server because the Pi will reach out to it. Even if there
+    are other users on the barcade's network, the Pi will not talk to them.
+
+*** Cabinet
+    :PROPERTIES:
+    :CUSTOM_ID: design--physical-components--cabinet
+    :END:
+
+    "Cabinet" in this entire document refers not to gold or blue cab, but the
+    computer running the Unity game process that we know as Killer Queen. It
+    really is just a computer stuffed under all of that wood and wiring. It has
+    an Ethernet port that we will use to connect it directly to the Pi.
+
+*** Server
+    :PROPERTIES:
+    :CUSTOM_ID: design--physical-components--server
+    :END:
+
+    The server is a node process that will be hosted on an EC2 instance or
+    something similar. Something like an AWS Lambda service won't work here
+    because we want to have a socket open with the Pi for bidirectional
+    communication. Maybe this is a costly setup but we can revisit it later.
+
+*** "iPhone4 why god why"
+    :PROPERTIES:
+    :CUSTOM_ID: design--physical-components--iphone4-why-god-why
+    :END:
+    This represents whatever "smart" phone people are using some unheard of
+    browser to connect to the server. The mobile device will be served a
+    simplistic web app that will allow the owner of sad device to queue up for
+    sets. It needn't be an iPhone. It needn't be a 4.
+
+** Software entities
+   :PROPERTIES:
+   :CUSTOM_ID: design--software-entities
+   :END:
+*** The Socket Relay
+    :PROPERTIES:
+    :CUSTOM_ID: design--software-entities--the-socket-relay
+    :END:
+
+    The socket relay runs in the Pi and passes data back and forth between the
+    server and the cabinet. The relay will become generalized and removed from
+    this repository at some point so we can utilize it for more ambitious means
+    of controller the cabinet later. This app is very dumb and really just takes
+    anything it gets and forwards it other endpoint it is connected to. This is
+    made secure because it connects to the server and only the server. We can
+    use something like socket.io to prevent a [[https://en.wikipedia.org/wiki/Man-in-the-middle_attack][man in the middle attack]] between
+    the Pi and the server.
+
+*** The Server
+    :PROPERTIES:
+    :CUSTOM_ID: design--software-entities--the-server
+    :END:
+
+    The server has a two-fold responsibility: It receives requests to queue up
+    to the cabinet, and it manages the cabinet's tournament mode to emulate a
+    queue of teams playing sets.
+
+*** The interface
+    :PROPERTIES:
+    :CUSTOM_ID: design--software-entities--the-interface
+    :END:
+
+    The interface, or "web app" is a single page app that allows users to queue
+    up for games. Administrators can use the app to remove teams from the queue.
+    Initially this will be open, but if it runs into problems we can add
+    authentication for ordinary users in order to queue.
