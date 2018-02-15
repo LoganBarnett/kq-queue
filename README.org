@@ -53,7 +53,7 @@ capability is to carpet the Earth with emoji.
   wifi. The Pi connects to a server hosted somewhere in the [[https://en.wikipedia.org/wiki/Series_of_tubes][series of tubes]]. The
   server ultimately has control of how the cabinet will be directed.
 
-  #+begin_src plantuml :file network-design.svg
+  #+begin_src plantuml :file network-design.svg :exports results
 node "barcade network" {
   [cabinet] <- [pi]
 }
