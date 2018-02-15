@@ -1,4 +1,4 @@
-#+title:    Killer Queen Queue README
+#+title:    Killer Queen Queue
 #+author:   Logan Barnett
 #+email:    logustus@gmail.com
 #+date:     <2018-02-14 Wed>
@@ -10,7 +10,7 @@
   :CUSTOM_ID: description
   :END:
 
-KQ Queue (more) - A queuing system for Killer Queen cabinets using its
+KQ Queue (more n00b) - A queuing system for Killer Queen cabinets using its
 tournament mode to manage a queue of games.
 
 * Motivations
@@ -146,7 +146,7 @@ node "internet" {
     to the cabinet, and it manages the cabinet's tournament mode to emulate a
     queue of teams playing sets.
 
-*** The interface
+*** The Interface
     :PROPERTIES:
     :CUSTOM_ID: design--software-entities--the-interface
     :END:
