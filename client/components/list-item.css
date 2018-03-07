@@ -1,0 +1,11 @@
+.teamQueue {
+  padding: 1em;
+}
+
+.teamQueue:nth-child(even) {
+  background-color: lightyellow;
+}
+
+.teamQueue:nth-child(odd) {
+  background-color: lightblue;
+}

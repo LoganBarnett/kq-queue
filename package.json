@@ -1,0 +1,46 @@
+{
+  "name": "kq-cab-queue",
+  "version": "0.1.0",
+  "description": "Allow players to queue up for sets on a Killer Queen cabinet.",
+  "main": "server/app.js",
+  "repository": "git@github.com:LoganBarnett/kq-cab-queue.git",
+  "author": "Logan Barnett <logustus@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/preset-env": "7.0.0-beta.40",
+    "@babel/preset-flow": "7.0.0-beta.40",
+    "@babel/preset-react": "7.0.0-beta.40",
+    "autoprefixer": "8.1.0",
+    "babel-flow-webpack-plugin": "1.1.0",
+    "babel-loader": "8.0.0-beta.0",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-flow": "6.23.0",
+    "babel-preset-react": "6.24.1",
+    "css-loader": "0.28.10",
+    "css-modules-flow-types-loader": "1.1.0",
+    "eslint": "4.18.1",
+    "extract-text-webpack-plugin": "3.0.2",
+    "flow": "0.2.3",
+    "flow-bin": "0.66.0",
+    "flow-typed": "2.3.0",
+    "html-webpack-plugin": "3.0.6",
+    "nodemon": "1.14.12",
+    "postcss-cssnext": "3.1.0",
+    "postcss-loader": "2.1.1",
+    "webpack": "3.11.0",
+    "webpack-dev-server": "2.11.1"
+  },
+  "dependencies": {
+    "@babel/core": "7.0.0-beta.40",
+    "ramda": "0.25.0",
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "react-redux": "5.0.7",
+    "redux": "3.7.2",
+    "redux-logger": "3.0.6"
+  },
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack-dev-server"
+  }
+}
